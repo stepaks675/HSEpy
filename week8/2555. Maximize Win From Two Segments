@@ -1,0 +1,22 @@
+def maximize_win(prizePositions, k):
+    n = len(prizePositions)
+    left_count = [0] * n
+    max_prizes = 0
+    j = 0
+
+    for i in range(n):
+        while prizePositions[i] - prizePositions[j] > k:
+            j += 1
+        left_count[i] = i - j + 1
+        if i > 0:
+            left_count[i] = max(left_count[i], left_count[i - 1])
+
+    j = 0
+    for i in range(n):
+        while prizePositions[i] - prizePositions[j] > k:
+            j += 1
+        prizes_in_current_segment = i - j + 1
+        prizes_in_left_segment = left_count[j - 1] if j > 0 else 0
+        max_prizes = max(max_prizes, prizes_in_current_segment + prizes_in_left_segment)
+
+    return max_prizes

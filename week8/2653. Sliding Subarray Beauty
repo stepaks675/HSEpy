@@ -1,0 +1,24 @@
+from collections import deque
+
+def get_subarray_beauty(nums, k, x):
+    n = len(nums)
+    result = []
+    window = deque()
+    neg_count = deque()
+    
+    for i in range(n):
+        window.append(nums[i])
+        if nums[i] < 0:
+            neg_count.append(nums[i])
+        
+        if len(window) > k:
+            if window.popleft() < 0:
+                neg_count.popleft()
+        
+        if len(window) == k:
+            if len(neg_count) >= x:
+                result.append(sorted(neg_count)[x - 1])
+            else:
+                result.append(0)
+    
+    return result

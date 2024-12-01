@@ -1,0 +1,25 @@
+from collections import Counter
+
+def max_almost_unique_subarray(nums, m, k):
+    max_sum = 0
+    current_sum = 0
+    freq = Counter()
+    distinct_count = 0
+    n = len(nums)
+    
+    for i in range(n):
+        freq[nums[i]] += 1
+        if freq[nums[i]] == 1:
+            distinct_count += 1
+        current_sum += nums[i]
+        
+        if i >= k:
+            current_sum -= nums[i - k]
+            freq[nums[i - k]] -= 1
+            if freq[nums[i - k]] == 0:
+                distinct_count -= 1
+        
+        if i >= k - 1 and distinct_count >= m:
+            max_sum = max(max_sum, current_sum)
+    
+    return max_sum

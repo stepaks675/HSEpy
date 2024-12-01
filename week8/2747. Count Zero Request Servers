@@ -1,0 +1,22 @@
+from collections import defaultdict
+
+def count_servers_not_receiving_requests(n, logs, x, queries):
+    result = []
+    queries_with_indices = sorted((query, i) for i, query in enumerate(queries))
+    logs.sort(key=lambda log: log[1])
+    active_servers = defaultdict(int)
+    left = 0
+
+    for query, idx in queries_with_indices:
+        while left < len(logs) and logs[left][1] < query - x:
+            active_servers[logs[left][0]] -= 1
+            if active_servers[logs[left][0]] == 0:
+                del active_servers[logs[left][0]]
+            left += 1
+        right = left
+        while right < len(logs) and logs[right][1] <= query:
+            active_servers[logs[right][0]] += 1
+            right += 1
+        result.append((query, n - len(active_servers)))
+
+    return [res[1] for res in sorted(result, key=lambda x: queries.index(x[0]))]
